@@ -69,7 +69,7 @@
     </message>
 </context>
 <context>
-    <name>BitcoinGUI</name>
+    <name>FujicoinGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Se sincronizează cu rețeaua</translation>
@@ -143,6 +143,6 @@
     <name>UnitDisplayStatusBarControl</name>
     </context>
 <context>
-    <name>bitcoin-core</name>
+    <name>fujicoin-core</name>
     </context>
 </TS>
