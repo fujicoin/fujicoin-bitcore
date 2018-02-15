@@ -22,7 +22,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-    txNew.vin[0].scriptSig = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    txNew.vin[0].scriptSig = CScript() << 0 << CScriptNum(999) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
@@ -50,8 +50,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
-    const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+    const char* pszTimestamp = "Mount Fuji is the most beautiful mountain in Japan, altitude is 3776.24m";
+    const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -74,56 +74,56 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
-        consensus.BIP34Height = 227931;
-        consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
-        consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 10 * 60;
+        consensus.BIP34Height = 0;
+        consensus.BIP34Hash = uint256S("0xadb6d9cfd74075e7f91608add4bd2a2ea636f70856183086842667a1597714a0");
+        //consensus.BIP65Height = 99999999;
+        //consensus.BIP66Height = 99999999;
+        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.nPowTargetTimespan = 1.4 * 24 * 60 * 60; //1.4 days
+        consensus.nPowTargetSpacing = 1.0 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
+        consensus.nRuleChangeActivationThreshold = 1512; // 75% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        // Test dummy
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1522540800; // Apr 1st, 2018 (UTC)
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1554076800; // Apr 1st, 2019 (UTC)
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1462060800; // May 1st, 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1522540800; // Apr 1st, 2018 (UTC)
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1554076800; // Apr 1st, 2019 (UTC)
 
-        // Deployment of SegWit (BIP141 and BIP143)
+        // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // Never / undefined
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1522540800; // Apr 1st, 2018 (UTC)
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1554076800; // Apr 1st, 2019 (UTC)
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xf9;
-        pchMessageStart[1] = 0xbe;
-        pchMessageStart[2] = 0xb4;
-        pchMessageStart[3] = 0xd9;
-        nDefaultPort = 8333;
+        pchMessageStart[0] = 0x66;
+        pchMessageStart[1] = 0x75;
+        pchMessageStart[2] = 0x6a;
+        pchMessageStart[3] = 0x69;
+        nDefaultPort = 3777;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1403910000, 2560786, 0x1e0ffff0, 1, 1 * COIN); //(nTime, nNonce, nBits, nVersion, genesisReward)
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+        assert(consensus.hashGenesisBlock == uint256S("0xadb6d9cfd74075e7f91608add4bd2a2ea636f70856183086842667a1597714a0"));
+        assert(genesis.hashMerkleRoot == uint256S("0xf951a273c3055d1bb36b4291e7f9edd491c2d435bd5737318ef8a643cab84b61"));
 
-        vSeeds.push_back(CDNSSeedData("fujicoin.sipa.be", "seed.fujicoin.sipa.be", true)); // Pieter Wuille
-        vSeeds.push_back(CDNSSeedData("bluematt.me", "dnsseed.bluematt.me")); // Matt Corallo
-        vSeeds.push_back(CDNSSeedData("dashjr.org", "dnsseed.fujicoin.dashjr.org")); // Luke Dashjr
-        vSeeds.push_back(CDNSSeedData("fujicoinstats.com", "seed.fujicoinstats.com")); // Christian Decker
-        vSeeds.push_back(CDNSSeedData("xf2.org", "bitseed.xf2.org")); // Jeff Garzik
-        vSeeds.push_back(CDNSSeedData("fujicoin.jonasschnelli.ch", "seed.fujicoin.jonasschnelli.ch")); // Jonas Schnelli
+        // Note that of those with the service bits flag, most only support a subset of possible options
+        vSeeds.emplace_back("seed1.fujicoin.org", true); // Fujicoin official seed
+        vSeeds.emplace_back("seed2.fujicoin.org", true); // Fujicoin official seed
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,36);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,16);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,164);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
@@ -137,23 +137,29 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            ( 11111, uint256S("0x0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d"))
-            ( 33333, uint256S("0x000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6"))
-            ( 74000, uint256S("0x0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20"))
-            (105000, uint256S("0x00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97"))
-            (134444, uint256S("0x00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe"))
-            (168000, uint256S("0x000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763"))
-            (193000, uint256S("0x000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317"))
-            (210000, uint256S("0x000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e"))
-            (216116, uint256S("0x00000000000001b4f4b433e81ee46494af945cf96014816a4e2370f11b23df4e"))
-            (225430, uint256S("0x00000000000001c108384350f74090433e7fcf79a606b8e797f065b130575932"))
-            (250000, uint256S("0x000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214"))
-            (279000, uint256S("0x0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40"))
-            (295000, uint256S("0x00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983")),
-            1397080064, // * UNIX timestamp of last checkpoint block
-            36544669,   // * total number of transactions between genesis and last checkpoint
+            (      0, uint256S("0xadb6d9cfd74075e7f91608add4bd2a2ea636f70856183086842667a1597714a0"))
+            ( 100000, uint256S("0x1d16bb119ef3b45134055b7e16a55f99d3ef5e211922037b9fb7274a988562f6"))
+            ( 200000, uint256S("0x588a542ff995394bc16731e3b53ea62f403fdfec4df5f8b4a38ad61a451523ec"))
+            ( 300000, uint256S("0x29d9a3d44ccc482980f6e5a2559c0588dd71e9bcc802dba8c6d18d10bb406ad2"))
+            ( 400000, uint256S("0x3c45c562ebccdf9ee7c0cb7509d9eebcbda9298636c9f4e3950fef2f6d29b8f5"))
+            ( 500000, uint256S("0x91c0fbc72fc8e421d85a922ec4f6477e5763c04729d13c4f58c1b79c83232b81"))
+            ( 600000, uint256S("0xc7105925a54a06fb27b4574f3b5732965d7c5b975d71b91c12c1672b68045c38"))
+            ( 700000, uint256S("0x0e9946a0196fcd286ef16d7873b38c9729ac8c1bc6b540ec12225ebc0291d5d2"))
+            ( 800000, uint256S("0xf3cb5bb24c7ae26f9ffe8001d594d4a951cc9a58589ac74519357add723f5602"))
+            ( 900000, uint256S("0x0b5b53332af404ac740965c717a3e797cff330d9d42fb8821eedb97856d11248"))
+            (1000000, uint256S("0xe267f45f1552c735a0f879403030c3f0904e8e9e0dc84cf2e6d13fcc32520dc3"))
+            (1100000, uint256S("0x34c2396e76d0dba38cce0f247766e1b85fad5938598f0a4eb29c3b5aeccbb60b"))
+            (1200000, uint256S("0x00d47aac9bef0bfb211ebeabf5077520da5170cb269389955d1612aa0cb2757a"))
+            (1300000, uint256S("0xa4f63f7b5b92a46e73cbf3e208f5dacb2b09a39287f561541a2fc90d44b97148"))
+            (1400000, uint256S("0x86c187cf79e3723189221337b457947bf88448414205e1c37435c56a9dc55052"))
+            (1500000, uint256S("0xda3ce4ee4d6715aa5b9b6b94099b0d05cf28585473ab206c8b179c7a73ebbde8"))
+            (1600000, uint256S("0xfbe956df17cb237f6ad438c6f94215e383259b88226ebcf38f13c611313442a7"))
+            (1700000, uint256S("0xaf35ad36a43ac08d1f2d764984ccd46855d4e968853bb2287a6662ea798d6383"))
+            (1800000, uint256S("0x0f5353f137b5e3f0e45d5643843ba452ac84bb6470ba608eae71994f0be87412")),
+            1516945775, // * UNIX timestamp of last checkpoint block
+            347536,   // * total number of transactions between genesis and last checkpoint
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            60000.0     // * estimated number of transactions per day after checkpoint
+            864.0     // * estimated number of transactions per day after checkpoint
         };
     }
 };

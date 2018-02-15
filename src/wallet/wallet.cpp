@@ -99,12 +99,12 @@ CPubKey CWallet::GenerateNewKey()
 
     // use HD key derivation if HD was enabled during wallet creation
     if (!hdChain.masterKeyID.IsNull()) {
-        // for now we use a fixed keypath scheme of m/0'/0'/k
+        // for now we use a fixed keypath scheme of m/75'/0'/k
         CKey key;                      //master key seed (256bit)
         CExtKey masterKey;             //hd master key
-        CExtKey accountKey;            //key at m/0'
-        CExtKey externalChainChildKey; //key at m/0'/0'
-        CExtKey childKey;              //key at m/0'/0'/<n>'
+        CExtKey accountKey;            //key at m/75'
+        CExtKey externalChainChildKey; //key at m/75'/0'
+        CExtKey childKey;              //key at m/75'/0'/<n>'
 
         // try to get the master key
         if (!GetKey(hdChain.masterKeyID, key))
@@ -112,11 +112,11 @@ CPubKey CWallet::GenerateNewKey()
 
         masterKey.SetMaster(key.begin(), key.size());
 
-        // derive m/0'
+        // derive m/75'
         // use hardened derivation (child keys >= 0x80000000 are hardened after bip32)
         masterKey.Derive(accountKey, BIP32_HARDENED_KEY_LIMIT);
 
-        // derive m/0'/0'
+        // derive m/75'/0'
         accountKey.Derive(externalChainChildKey, BIP32_HARDENED_KEY_LIMIT);
 
         // derive child key at next index, skip keys already known to the wallet
@@ -126,7 +126,7 @@ CPubKey CWallet::GenerateNewKey()
             // childIndex | BIP32_HARDENED_KEY_LIMIT = derive childIndex in hardened child-index-range
             // example: 1 | BIP32_HARDENED_KEY_LIMIT == 0x80000001 == 2147483649
             externalChainChildKey.Derive(childKey, hdChain.nExternalChainCounter | BIP32_HARDENED_KEY_LIMIT);
-            metadata.hdKeypath     = "m/0'/0'/"+std::to_string(hdChain.nExternalChainCounter)+"'";
+            metadata.hdKeypath     = "m/75'/0'/"+std::to_string(hdChain.nExternalChainCounter)+"'";
             metadata.hdMasterKeyID = hdChain.masterKeyID;
             // increment childkey index
             hdChain.nExternalChainCounter++;
