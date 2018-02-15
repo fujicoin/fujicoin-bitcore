@@ -19,7 +19,7 @@ TMPFILE="hashes.tmp"
 
 SIGNATUREFILENAME="SHA256SUMS.asc"
 RCSUBDIR="test/"
-BASEDIR="https://fujicoin.org/bin/"
+BASEDIR="https://bitcoin.org/bin/"
 VERSIONPREFIX="fujicoin-core-"
 RCVERSIONSTRING="rc"
 

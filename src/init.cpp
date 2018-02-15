@@ -484,7 +484,7 @@ std::string HelpMessage(HelpMessageMode mode)
 std::string LicenseInfo()
 {
     const std::string URL_SOURCE_CODE = "<https://github.com/fujicoin/fujicoin>";
-    const std::string URL_WEBSITE = "<https://fujicoincore.org>";
+    const std::string URL_WEBSITE = "<http://www.fujicoin.org>";
     // todo: remove urls from translations on next change
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +

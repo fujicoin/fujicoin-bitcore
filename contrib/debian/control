@@ -23,7 +23,7 @@ Build-Depends: debhelper,
  libprotobuf-dev, protobuf-compiler,
  python
 Standards-Version: 3.9.2
-Homepage: https://fujicoincore.org/
+Homepage: http://www.fujicoin.org/
 Vcs-Git: git://github.com/fujicoin/fujicoin.git
 Vcs-Browser: https://github.com/fujicoin/fujicoin
 
