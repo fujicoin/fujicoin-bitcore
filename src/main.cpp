@@ -540,7 +540,8 @@ CBlockIndex* LastCommonAncestor(CBlockIndex* pa, CBlockIndex* pb) {
 
 /** Update pindexLastCommonBlock and add not-in-flight missing successors to vBlocks, until it has
  *  at most count entries. */
-void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBlockIndex*>& vBlocks, NodeId& nodeStaller) {
+void FindNextBlocksToDownload(CNode* pto, unsigned int count, std::vector<CBlockIndex*>& vBlocks, NodeId& nodeStaller) {
+    NodeId nodeid = pto->GetId();
     if (count == 0)
         return;
 
@@ -567,6 +568,13 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBl
     state->pindexLastCommonBlock = LastCommonAncestor(state->pindexLastCommonBlock, state->pindexBestKnownBlock);
     if (state->pindexLastCommonBlock == state->pindexBestKnownBlock)
         return;
+    
+    // Introduce settlement to Fujicoin's block chain.
+    // Payment will be settled with 6 confirmations.
+    if(!IsInitialBlockDownload() && (chainActive.Height() - state->pindexLastCommonBlock->nHeight) >= 6){
+        pto->fDisconnect = true;
+        return;
+    }
 
     std::vector<CBlockIndex*> vToFetch;
     CBlockIndex *pindexWalk = state->pindexLastCommonBlock;
@@ -7045,7 +7053,7 @@ bool SendMessages(CNode* pto)
         if (!pto->fDisconnect && !pto->fClient && (fFetch || !IsInitialBlockDownload()) && state.nBlocksInFlight < MAX_BLOCKS_IN_TRANSIT_PER_PEER) {
             vector<CBlockIndex*> vToDownload;
             NodeId staller = -1;
-            FindNextBlocksToDownload(pto->GetId(), MAX_BLOCKS_IN_TRANSIT_PER_PEER - state.nBlocksInFlight, vToDownload, staller);
+            FindNextBlocksToDownload(pto, MAX_BLOCKS_IN_TRANSIT_PER_PEER - state.nBlocksInFlight, vToDownload, staller);
             BOOST_FOREACH(CBlockIndex *pindex, vToDownload) {
                 if (State(pto->GetId())->fHaveWitness || !IsWitnessEnabled(pindex->pprev, consensusParams)) {
                     uint32_t nFetchFlags = GetFetchFlags(pto, pindex->pprev, consensusParams);
